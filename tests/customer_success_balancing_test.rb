@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'timeout'
 require_relative '../customer_success_balancing'
-require 'byebug'
 
 class CustomerSuccessBalancingTests < Minitest::Test
   def test_scenario_one
