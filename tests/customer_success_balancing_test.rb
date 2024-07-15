@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'timeout'
 require_relative '../customer_success_balancing'
+require 'byebug'
 
 class CustomerSuccessBalancingTests < Minitest::Test
   def test_scenario_one
@@ -74,6 +75,123 @@ class CustomerSuccessBalancingTests < Minitest::Test
       [2, 4]
     )
     assert_equal 1, balancer.execute
+  end
+
+  def test_customer_successes_has_different_scores
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([10, 20, 20, 40]),
+      build_scores([10, 20, 30, 40]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_empty_customer_successes
+    balancer = CustomerSuccessBalancing.new(
+      [],
+      build_scores([10]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_successes_smaller_than_1_000
+    balancer = CustomerSuccessBalancing.new(
+      build_scores(Array.new(1_000)),
+      build_scores([10]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_empty_customers
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([10]),
+      [],
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customers_smaller_than_1_000_000
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      build_scores(Array.new(1_000_000)),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_success_id_zero
+    balancer = CustomerSuccessBalancing.new(
+      [{ id: 0, score: 100 }],
+      build_scores([100]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_success_ids_smaller_than_1_000
+    balancer = CustomerSuccessBalancing.new(
+      [{ id: 1_000, score: 100 }],
+      build_scores([100]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_id_zero
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      [{ id: 0, score: 100 }],
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_ids_smaller_than_1_000_000
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      [{ id: 1_000_000, score: 100 }],
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_success_score_zero
+    balancer = CustomerSuccessBalancing.new(
+      [{ id: 1, score: 0 }],
+      build_scores([100]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_success_score_greater_than_9_999
+    balancer = CustomerSuccessBalancing.new(
+      [{ id: 1, score: 10_000 }],
+      build_scores([100]),
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_score_zero
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      [{ id: 1, score: 0 }],
+      []
+    )
+    assert_equal 0, balancer.execute
+  end
+
+  def test_customer_score_greater_than_99_999
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      [{ id: 1, score: 100_000 }],
+      []
+    )
+    assert_equal 0, balancer.execute
   end
 
   private

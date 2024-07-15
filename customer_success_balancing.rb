@@ -1,8 +1,10 @@
-require 'minitest/autorun'
+require_relative 'customer_success_balacing/validations'
 require_relative 'customer_success_balacing/customers'
 require_relative 'customer_success_balacing/available_customer_successes'
 
 class CustomerSuccessBalancing
+  include Validations
+
   attr_reader :customer_successes, :customers, :away_customer_successes
 
   def initialize(customer_successes, customers, away_customer_successes)
@@ -16,6 +18,8 @@ class CustomerSuccessBalancing
 
   # Returns the ID of the customer success with most customers or ZERO
   def execute
+    return 0 unless valid?
+
     split_customers_for_customer_successes
     customer_success_id_with_more_customers
   end
