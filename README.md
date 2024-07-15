@@ -42,6 +42,6 @@ Dado este cenário, o sistema distribui os clientes com os CSs de capacidade de 
 ### Executando os testes
 - No terminal, execute o comando:
 
-  ```
-  ruby customer_success_balancing.rb
+  ```sh
+  ruby tests/customer_success_balancing_test.rb
   ```
