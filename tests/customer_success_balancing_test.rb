@@ -194,6 +194,15 @@ class CustomerSuccessBalancingTests < Minitest::Test
     assert_equal 0, balancer.execute
   end
 
+  def test_maximum_away_customer_successes
+    balancer = CustomerSuccessBalancing.new(
+      build_scores([100]),
+      build_scores([10]),
+      [1],
+    )
+    assert_equal 0, balancer.execute
+  end
+
   private
 
   def build_scores(scores)

@@ -5,9 +5,10 @@ require_relative 'customer_success_balacing/available_customer_successes'
 class CustomerSuccessBalancing
   include Validations
 
-  attr_reader :customer_successes, :customers, :away_customer_successes
+  attr_reader :customer_successes, :customers, :away_customer_successes, :customer_successes_size
 
   def initialize(customer_successes, customers, away_customer_successes)
+    @customer_successes_size = customer_successes.size
     @away_customer_successes = away_customer_successes
     @customers = Customers.new(customers:).fetch
     @customer_successes = AvailableCustomerSuccesses.new(

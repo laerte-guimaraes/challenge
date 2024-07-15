@@ -9,7 +9,8 @@ class CustomerSuccessBalancing
         valid_customer_success_ids? &&
         valid_customer_ids? &&
         valid_customer_success_scores? &&
-        valid_customer_scores?
+        valid_customer_scores? &&
+        valid_maximum_away_customer_successes?
     end
 
     private
