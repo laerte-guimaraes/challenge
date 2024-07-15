@@ -54,7 +54,7 @@ class CustomerSuccessBalancing
     end
 
     def valid_maximum_away_customer_successes?
-      away_customer_successes.size <= (customer_successes_size / 2).floor
+      CustomerSuccess.away.size <= (CustomerSuccess.all.size / 2).floor
     end
   end
 end

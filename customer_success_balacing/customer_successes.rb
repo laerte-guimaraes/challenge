@@ -1,7 +1,7 @@
 require_relative '../models/customer_success'
 
 class CustomerSuccessBalancing
-  class AvailableCustomerSuccesses
+  class CustomerSuccesses
     attr_reader :customer_successes, :away_customer_successes
 
     def initialize(customer_successes:, away_customer_successes:)
@@ -10,12 +10,15 @@ class CustomerSuccessBalancing
     end
 
     def fetch
-      customer_successes.map do |cs|
-        # Skip away Customer Successes
-        next if away_customer_successes.include?(cs[:id])
+      CustomerSuccess.reset_all
 
-        CustomerSuccess.new(id: cs[:id], score: cs[:score])
-      end.compact.sort_by(&:score)
+      customer_successes.map do |cs|
+        CustomerSuccess.new(
+          id: cs[:id],
+          score: cs[:score],
+          available: !away_customer_successes.include?(cs[:id]) # `False` for away Customer Success
+        )
+      end
     end
   end
 end

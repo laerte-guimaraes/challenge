@@ -1,6 +1,6 @@
 require_relative 'customer_success_balacing/validations'
 require_relative 'customer_success_balacing/customers'
-require_relative 'customer_success_balacing/available_customer_successes'
+require_relative 'customer_success_balacing/customer_successes'
 
 class CustomerSuccessBalancing
   include Validations
@@ -8,13 +8,11 @@ class CustomerSuccessBalancing
   attr_reader :customer_successes, :customers, :away_customer_successes, :customer_successes_size
 
   def initialize(customer_successes, customers, away_customer_successes)
-    @customer_successes_size = customer_successes.size
-    @away_customer_successes = away_customer_successes
-    @customers = Customers.new(customers:).fetch
-    @customer_successes = AvailableCustomerSuccesses.new(
-      customer_successes:,
-      away_customer_successes:,
-    ).fetch
+    Customers.new(customers:).fetch
+    @customers = Customer.all
+
+    CustomerSuccesses.new(customer_successes:, away_customer_successes:).fetch
+    @customer_successes = CustomerSuccess.available.sort_by(&:score)
   end
 
   # Returns the ID of the customer success with most customers or ZERO
